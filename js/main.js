@@ -21,6 +21,24 @@
     });
   }
 
+  /* Волна на кнопках от точки нажатия */
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.btn');
+    if (!b || b.getAttribute('aria-disabled') === 'true') return;
+    var r = b.getBoundingClientRect();
+    var size = Math.max(r.width, r.height) * 2.4;
+    var wave = document.createElement('span');
+    wave.className = 'btn__wave';
+    wave.style.width = wave.style.height = size + 'px';
+    // клавиатурное нажатие (Enter) приходит с координатами 0,0: волна из центра
+    var x = e.clientX || e.clientY ? e.clientX - r.left : r.width / 2;
+    var y = e.clientX || e.clientY ? e.clientY - r.top : r.height / 2;
+    wave.style.left = (x - size / 2) + 'px';
+    wave.style.top = (y - size / 2) + 'px';
+    b.appendChild(wave);
+    wave.addEventListener('animationend', function () { wave.remove(); });
+  });
+
   /* Таймер: время до конца сегодняшнего дня */
   var cdH = document.getElementById('cd-h');
   var cdM = document.getElementById('cd-m');
